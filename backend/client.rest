@@ -1,0 +1,7 @@
+GET http://localhost:3000/
+
+###get expenses
+GET http://localhost:3000/expenses
+
+###get income
+GET http://localhost:3000/income
