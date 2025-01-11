@@ -5,3 +5,13 @@ GET http://localhost:3000/expenses
 
 ###get income
 GET http://localhost:3000/income
+
+###post income
+POST http://localhost:3000/income/add
+Content-Type: application/json
+
+{
+  "source_name": "sales Work",
+  "amount": 800.00,
+  "date_received": "2023-10-15"
+}

@@ -10,4 +10,20 @@ const getIncome = async (req, res) => {
     }
 };
 
-module.exports = { getIncome };
+//for post request
+const postIncome = async (req, res) => {
+    const { source_name, amount, date_received } = req.body;
+    try {
+        const result = await pool.query(
+            'INSERT INTO Income (source_name, amount, date_received) VALUES ($1, $2, $3) RETURNING *',
+            [source_name, amount, date_received]
+        );
+        console.log('added to table: ' + result)
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { getIncome, postIncome };
