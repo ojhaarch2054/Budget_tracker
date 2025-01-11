@@ -7,7 +7,7 @@ const ContextProvider = ({ children }) => {
   const [incomeState, setIncomeState] = useState([]);
 
   return (
-    <ContextApi.Provider value={[expenseState, setExpenseState, incomeState, setIncomeState]}>
+    <ContextApi.Provider value={{expenseState, setExpenseState, incomeState, setIncomeState}}>
       {children}
     </ContextApi.Provider>
   );

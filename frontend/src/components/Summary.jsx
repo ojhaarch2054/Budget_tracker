@@ -6,10 +6,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const SummaryForm = () => {
-  const [expenseState, setExpenseState, incomeState, setIncomeState] =
-    useContext(ContextApi);
+    const { expenseState, setExpenseState, incomeState, setIncomeState } = useContext(ContextApi);
   const navigate = useNavigate();
-  
+
   //useEffect to fetch expense from the backend
   useEffect(() => {
     const fetchData = async () => {

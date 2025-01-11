@@ -3,7 +3,7 @@ import { useContext, useState } from "react"
 import { ContextApi } from './context/ContextApi'; 
 import axios from 'axios';
 
-const IncomeForm = () => {
+const IncomeForm = ({}) => {
   const{setIncomeState} = useContext(ContextApi)
   //for incomeSourseInput
   const[incomeSourceInput, setIncomeSourceInput] = useState('')
@@ -14,7 +14,7 @@ const [incomeAmountInput, setIncomeAmountInput] = useState('');
   const submitIncome = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/income/add', {
+      const response = await axios.post('http://localhost:3000/incomes/add', {
         source_name: incomeSourceInput,
         amount: incomeAmountInput,
         date_received: new Date().toISOString().split('T')[0]

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 
 const ShowIncomeDetails = () => {
-    const [incomeState, setIncomeState] = useContext(ContextApi);
+    const {incomeState, setIncomeState} = useContext(ContextApi);
     const navigate = useNavigate();
     //fetch income data
   useEffect(() => {

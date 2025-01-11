@@ -15,3 +15,13 @@ Content-Type: application/json
   "amount": 800.00,
   "date_received": "2023-10-15"
 }
+
+###post expenses
+POST http://localhost:3000/expenses/add
+Content-Type: application/json
+
+{
+    "category": "food",
+    "amount": 700.00,
+    "date_paid": "2023-10-11"
+}
