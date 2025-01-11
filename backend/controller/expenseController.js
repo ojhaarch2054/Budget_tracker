@@ -26,4 +26,24 @@ const postExpense = async (req, res) => {
     }
 };
 
-module.exports = { getExpenses, postExpense };
+//for delete rqst
+const deleteExpenses = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await pool.query(
+        'DELETE FROM Expenses WHERE expense_id = $1 RETURNING *',
+        [id]
+      );
+      if (result.rowCount === 0) {
+        //console.log(`Expense with id: ${id} not found`);
+        return res.status(404).json({ error: 'Expense not found' });
+      }
+      //console.log('Deleted expense:', result.rows[0]);
+      res.status(200).json(result.rows[0]);
+    } catch (err) {
+      //console.error('Error deleting expense:', err.message);
+      res.status(500).send('Server Error');
+    }
+  };
+  
+module.exports = { getExpenses, postExpense , deleteExpenses};

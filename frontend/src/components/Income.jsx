@@ -19,7 +19,8 @@ const [incomeAmountInput, setIncomeAmountInput] = useState('');
         amount: incomeAmountInput,
         date_received: new Date().toISOString().split('T')[0]
       });
-      setIncomeState(response.data);
+      //update the previous income state by adding new income
+      setIncomeState(prevState => [...prevState, response.data]);
       //clear input field after adding
       setIncomeAmountInput('')
       setIncomeSourceInput('')

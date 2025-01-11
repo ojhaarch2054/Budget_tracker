@@ -6,7 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const SummaryForm = () => {
-    const { expenseState, setExpenseState, incomeState, setIncomeState } = useContext(ContextApi);
+  const { expenseState, setExpenseState, incomeState, setIncomeState } =
+    useContext(ContextApi);
   const navigate = useNavigate();
 
   //useEffect to fetch expense from the backend
@@ -19,7 +20,6 @@ const SummaryForm = () => {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [setExpenseState]);
 
@@ -33,9 +33,30 @@ const SummaryForm = () => {
         console.error("Error fetching income:", error);
       }
     };
-
     fetchIncome();
   }, [setIncomeState]);
+
+  //for delete btn/ to delete expenses
+  const deleteExpenses = (id) => {
+    if (window.confirm("Do you want to delete this expense?")) {
+      const deleteExp = async () => {
+        try {
+          //console.log(`Sending delete request for expense id: ${id}`);
+          await axios.delete(`http://localhost:3000/expenses/delete/${id}`);
+          //console.log(`Delete request successful for expense id: ${id}`);
+          setExpenseState((prevExpenses) => {
+            const updatedExpenses = prevExpenses.filter(
+              (expense) => expense.expense_id !== id
+            );
+            return updatedExpenses;
+          });
+        } catch (error) {
+            console.error("Error deleting expense:", error.response?.data || error.message);
+          }
+        }
+      deleteExp();
+    }
+  };
 
   //to show the income history
   const showIncome = () => {
@@ -81,12 +102,17 @@ const SummaryForm = () => {
               <tbody>
                 {Array.isArray(expenseState) &&
                   expenseState.map((expense) => (
-                    <tr key={expense.id}>
+                    <tr key={expense.expense_id}>
                       <td>{expense.category}</td>
                       <td>{expense.amount}</td>
                       <td>{expense.date_paid}</td>
                       <td>
-                        <button className="btn btn-danger">Delete</button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => deleteExpenses(expense.expense_id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}

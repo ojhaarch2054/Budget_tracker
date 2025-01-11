@@ -25,3 +25,6 @@ Content-Type: application/json
     "amount": 700.00,
     "date_paid": "2023-10-11"
 }
+
+###delete expenses
+DELETE http://localhost:3000/expenses/delete/5
