@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-    //state for input sections
+  const navigate = useNavigate();
+  //state for input sections
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -10,28 +13,74 @@ const SignUp = () => {
     address: "",
     job: "",
     phone: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
+  //state to save server response
+  const [usersDetails, setUsersDetails] = useState("");
 
   const handleChange = (e) => {
     //destructure the name and value from the event target
     const { name, value } = e.target;
     //update the state with the new value for input field
-    setInput(prevState => ({
+    setInput((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
-//check if both password fields are filled and their values match
-//1st input.password && input.confirmPassword ensure both password field are filled
-//2nd input.password === input.confirmPassword ensure the values of both password fields match.
-  const passwordsMatch = input.password && input.confirmPassword && input.password === input.confirmPassword;
+  //check if both password fields are filled and their values match
+  //1st input.password && input.confirmPassword ensure both password field are filled
+  //2nd input.password === input.confirmPassword ensure the values of both password fields match.
+  const passwordsMatch =
+    input.password &&
+    input.confirmPassword &&
+    input.password === input.confirmPassword;
 
-  const signUpSubmit = (e) => {
+  const signUpSubmit = async (e) => {
     e.preventDefault();
-    if(!input.name && !input.address && !input.email && !input.email && !input.lastname && !input.job && !input.phone && !input.confirmPassword){
-        alert("must fill all the field")
+    console.log('signup successfully')
+    if (
+      !input.name ||
+      !input.address ||
+      !input.email ||
+      !input.lastname ||
+      !input.job ||
+      !input.phone ||
+      !input.confirmPassword
+    ) {
+      alert("must fill all the field");
+    }
+    if (!passwordsMatch) {
+      alert("Passwords do not match");
+      return;
+    }
+    try {
+      const response = await axios.post("http://localhost:3000/users", {
+        email: input.email,
+        password: input.password,
+        fullname: input.name,
+        lastname: input.lastname,
+        address: input.address,
+        job: input.job,
+        phone: input.phone,
+      });
+      //update the previous state by adding new added data
+      setUsersDetails((prevState) => [...prevState, response.data]);
+      setInput({
+        name: "",
+        address: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        lastname: "",
+        job: "",
+        phone: "",
+      });
+      console.log(input.email + " added");
+      navigate('/');
+    } catch (error) {
+      console.error("Error occurred:", error);
+      alert("Error occurred while signing up");
     }
   };
 
@@ -49,7 +98,8 @@ const SignUp = () => {
             value={input.name}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="lname">Last Name</label>
           <input
@@ -61,7 +111,8 @@ const SignUp = () => {
             value={input.lastname}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="address">Address</label>
           <input
@@ -73,7 +124,8 @@ const SignUp = () => {
             value={input.address}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="job">Job</label>
           <input
@@ -85,7 +137,8 @@ const SignUp = () => {
             value={input.job}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="phoneNumber">phone Number</label>
           <input
@@ -97,7 +150,8 @@ const SignUp = () => {
             value={input.phone}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="emailId">Email address</label>
           <input
@@ -110,7 +164,8 @@ const SignUp = () => {
             value={input.email}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="password1">Password</label>
           <input
@@ -122,7 +177,8 @@ const SignUp = () => {
             value={input.password}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         <div className="form-group">
           <label htmlFor="password2">Confirm Password</label>
           <input
@@ -134,9 +190,12 @@ const SignUp = () => {
             value={input.confirmPassword}
             onChange={handleChange}
           />
-        </div><br />
+        </div>
+        <br />
         {passwordsMatch && <p>Passwords match</p>}
-        {!passwordsMatch && input.confirmPassword && <p>Passwords do not match</p>}
+        {!passwordsMatch && input.confirmPassword && (
+          <p>Passwords do not match</p>
+        )}
         <button type="submit" className="btn btn-primary">
           Sign Up
         </button>

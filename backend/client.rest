@@ -43,3 +43,6 @@ Content-Type: application/json
     "phone": "4512589654"
 
 }
+
+###get users
+GET http://localhost:3000/users
