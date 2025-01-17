@@ -28,3 +28,18 @@ Content-Type: application/json
 
 ###delete expenses
 DELETE http://localhost:3000/expenses/delete/5
+
+###Post users
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "email": "hei@gmail.com",
+    "password": "123456789",
+    "fullname": "hei",
+    "lastname": "hei",
+    "address": "Helsinki",
+    "job": "Manager",
+    "phone": "4512589654"
+
+}

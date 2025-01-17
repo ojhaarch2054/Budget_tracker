@@ -27,3 +27,15 @@ VALUES
 ('Salary', 3000.00, '2023-10-01'),
 ('Freelance', 500.00, '2023-10-10'),
 ('Investment', 200.00, '2023-10-15');
+
+/*for users table */
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  fullname VARCHAR(255),
+  lastname VARCHAR(255),
+  address VARCHAR(255),
+  job VARCHAR(255),
+  phone VARCHAR(255)
+);
