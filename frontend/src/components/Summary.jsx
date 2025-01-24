@@ -1,49 +1,92 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/summary.css";
-import { ContextApi } from "./context/ContextApi";
+import { ContextApi } from "../context/ContextApi";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthProvider";
 
 const SummaryForm = () => {
   const { expenseState, setExpenseState, incomeState, setIncomeState } =
     useContext(ContextApi);
+    //destructure auth from AuthContext
+    const { auth } = useContext(AuthContext);
+    //initialize navigation function
   const navigate = useNavigate();
 
   //useEffect to fetch expense from the backend
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/expenses");
+        //get rqst to fetch expenses
+        const response = await axios.get("http://localhost:3000/expenses", {
+          //include authorization token in headers
+          headers: {
+            Authorization: `Bearer ${auth.token}`
+          }
+        });
+        //update state with fetched data
         setExpenseState(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    fetchData();
-  }, [setExpenseState]);
+    //fetch data if the user is authenticated
+    if (auth.token) {
+      fetchData();
+    }
+  }, [setExpenseState, auth.token]);
 
   //fetch income data
   useEffect(() => {
     const fetchIncome = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/income");
+        //get rqst to fetch income
+        const response = await axios.get("http://localhost:3000/income" , {
+          //added authorization token in headers
+          headers: {
+            Authorization: `Bearer ${auth.token}`
+          }
+        });
+        //update icome state with fetched data
         setIncomeState(response.data);
       } catch (error) {
         console.error("Error fetching income:", error);
       }
     };
-    fetchIncome();
-  }, [setIncomeState]);
+    //fetch data if use is authenticated
+    if (auth.token) {
+      fetchIncome();
+    }
+  }, [setIncomeState, auth.token]);
 
   //for delete btn/ to delete expenses
   const deleteExpenses = (id) => {
+    //check user is authenticate or not
+    if (!auth.token) {
+      alert("You must be logged in to delete expenses");
+      return;
+    }
+    //check if user has user role or not
+    if (!auth.user || (typeof auth.roles === 'string' ? ![auth.roles].includes("user") : !auth.roles.includes("user"))) {
+      console.log("Auth roles inside condition:", auth.roles);
+      alert("You do not have permission to add income");
+      return;
+    }
     if (window.confirm("Do you want to delete this expense?")) {
       const deleteExp = async () => {
         try {
           //console.log(`Sending delete request for expense id: ${id}`);
-          await axios.delete(`http://localhost:3000/expenses/delete/${id}`);
+
+          //send dlt rqst to server with expenseid
+          await axios.delete(`http://localhost:3000/expenses/delete/${id}`, {
+            headers: {
+              Authorization: `Bearer ${auth.token}`
+            }
+          });
           //console.log(`Delete request successful for expense id: ${id}`);
+
+          //update the state to remove deleted expenses
           setExpenseState((prevExpenses) => {
             const updatedExpenses = prevExpenses.filter(
               (expense) => expense.expense_id !== id
@@ -54,6 +97,7 @@ const SummaryForm = () => {
             console.error("Error deleting expense:", error.response?.data || error.message);
           }
         }
+        //call the async fun to delete the expenses
       deleteExp();
     }
   };

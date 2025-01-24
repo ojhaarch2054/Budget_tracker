@@ -1,34 +1,4 @@
-CREATE TABLE Expenses (
-    expense_id SERIAL PRIMARY KEY,
-    category VARCHAR(255) NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    date_paid DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Income (
-    income_id SERIAL PRIMARY KEY,
-    source_name VARCHAR(255) NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    date_received DATE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO Expenses (category, amount, date_paid)
-VALUES 
-('Groceries', 150.75, '2023-10-01'),
-('Utilities', 75.50, '2023-10-05'),
-('Rent', 1200.00, '2023-10-01'),
-('Entertainment', 60.00, '2023-10-10');
-
-
-INSERT INTO Income (source_name, amount, date_received)
-VALUES 
-('Salary', 3000.00, '2023-10-01'),
-('Freelance', 500.00, '2023-10-10'),
-('Investment', 200.00, '2023-10-15');
-
-/*for users table */
+/*create users table*/
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) NOT NULL,
@@ -37,5 +7,28 @@ CREATE TABLE users (
   lastname VARCHAR(255),
   address VARCHAR(255),
   job VARCHAR(255),
-  phone VARCHAR(255)
+  phone VARCHAR(255),
+  role VARCHAR(50) NOT NULL DEFAULT 'user'
+);
+
+/*create expenses table with a foreign key reference to users table*/
+CREATE TABLE Expenses (
+  expense_id SERIAL PRIMARY KEY,
+  category VARCHAR(255) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  date_paid DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+/*create income table with a foreign key reference to users table*/
+CREATE TABLE Income (
+  income_id SERIAL PRIMARY KEY,
+  source_name VARCHAR(255) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  date_received DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );

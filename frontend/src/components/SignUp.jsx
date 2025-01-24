@@ -55,6 +55,7 @@ const SignUp = () => {
       return;
     }
     try {
+      //post rqst to register user
       const response = await axios.post("http://localhost:3000/users", {
         email: input.email,
         password: input.password,
