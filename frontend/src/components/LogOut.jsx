@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
+import "../css/logOut.css"
 
 const Logout = () => {
     const { logout } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const Logout = () => {
 
     return (
         <div className="d-flex justify-content-center">
-            <button onClick={logOutBtn} className="btn btn-secondary w-25 mb-5">
+            <button onClick={logOutBtn} className="btn logOutbtn w-25 mb-5">
                 Logout
             </button>
             {isLoggedOut && <p>You have been logged out successfully.</p>}

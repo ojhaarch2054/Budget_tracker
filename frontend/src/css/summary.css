@@ -1,5 +1,21 @@
-.summaryContainer{
-    margin-top: -507px;
-    margin-left: 370px;
-  }
+.summaryContainer {
+  margin-top: -620px;
+  margin-left: auto;
   
+}
+/*for screen 990px or smaller*/
+@media (max-width: 990px) {
+  .summaryContainer {
+    margin-top: 0;
+  }
+}
+
+.btn1{
+  background-color: orange;
+  color: white;
+}
+
+.dltBtn{
+  background-color: red !important;
+  color: white
+}

@@ -123,45 +123,49 @@ const SummaryForm = () => {
   const budgetLeft = totalIncome - totalExpense;
 
   return (
-    <div className="container w-75 summaryContainer">
-      <div className="right-side">
-        <div className="d-flex justify-content-between">
-          <p className="btn btn-primary" onClick={showIncome}>
-            Total Income: {totalIncome}
-          </p>
-          <p className="btn btn-primary">Total Expenses: {totalExpense}</p>
-          <p className="btn btn-primary">Budget Left: {budgetLeft}</p>
-        </div>
-        <div className="card">
-          <div className="card-body">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Expense Name</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Date paid</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(expenseState) &&
-                  expenseState.map((expense) => (
-                    <tr key={expense.expense_id}>
-                      <td>{expense.category}</td>
-                      <td>{expense.amount}</td>
-                      <td>{expense.date_paid}</td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => deleteExpenses(expense.expense_id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
+    <div className="container summaryContainer">
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-10 col-lg-8">
+          <div className="d-flex justify-content-between flex-wrap">
+            <p className="btn btn1 mb-2" onClick={showIncome}>
+              Total Income: {totalIncome}
+            </p>
+            <p className="btn btn1 mb-2">Total Expenses: {totalExpense}</p>
+            <p className="btn btn1 mb-2">Budget Left: {budgetLeft}</p>
+          </div>
+          <div className="card">
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Expense Name</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Date paid</th>
+                      <th scope="col">Action</th>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {Array.isArray(expenseState) &&
+                      expenseState.map((expense) => (
+                        <tr key={expense.expense_id}>
+                          <td>{expense.category}</td>
+                          <td>{expense.amount}</td>
+                          <td>{expense.date_paid}</td>
+                          <td>
+                            <button
+                              className="btn dltBtn"
+                              onClick={() => deleteExpenses(expense.expense_id)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>

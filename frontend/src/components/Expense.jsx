@@ -63,22 +63,39 @@ const ExpenseForm = () => {
     alert(expenseAmt + ' is added to expenses');
   };
   
-
   return (
-    <>
-      <div className="card w-25">
-        <div className="card-header">Add Expense</div>
-        <div className="card-body">
-            <form onSubmit={submitExpenses}>
-                <label className="card-title">Expense Title:</label><br />
-                <input type="text" className="card-text" onChange={(e) => setExpenseTitle(e.target.value)} value={expenseTitle} /><br />
-                <label className="card-title">Amount:</label><br />
-                <input type="number" className="card-text" onChange={(e) => setExpenseAmt(e.target.value)} value={expenseAmt} /><br /> <br />
-                <button>Add Expense</button>
-            </form>
+    <div className="container">
+      <div className="row">
+        <div className="col-12">
+          <div className="card mb-4">
+            <div className="card-header">Add Expense</div>
+            <div className="card-body">
+              <form onSubmit={submitExpenses}>
+                <div className="mb-3">
+                  <label className="form-label">Expense Title:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => setExpenseTitle(e.target.value)}
+                    value={expenseTitle}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Amount:</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    onChange={(e) => setExpenseAmt(e.target.value)}
+                    value={expenseAmt}
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary">Add Expense</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

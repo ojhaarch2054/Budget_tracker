@@ -54,35 +54,39 @@ const IncomeForm = ({}) => {
   };
 
   return (
-    <>
-      <div className="card w-25">
-        <div className="card-header">Add Income</div>
-        <div className="card-body">
-          <form onSubmit={submitIncome}>
-            <label className="card-title">Income Source:</label>
-            <br />
-            <input
-              type="text"
-              className="card-text"
-              value={incomeSourceInput}
-              onChange={(e) => setIncomeSourceInput(e.target.value)}
-            />
-            <br />
-            <label className="card-title">Amount:</label>
-            <br />
-            <input
-              type="number"
-              className="card-text"
-              value={incomeAmountInput}
-              onChange={(e) => setIncomeAmountInput(e.target.value)}
-            />
-            <br /> <br />
-            <button>Add Income</button>
-          </form>
+    <div className="container">
+    <div className="row">
+      <div className="col-12">
+        <div className="card mb-4">
+          <div className="card-header">Add Income</div>
+          <div className="card-body">
+            <form onSubmit={submitIncome}>
+              <div className="mb-3">
+                <label className="form-label">Income Source:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={incomeSourceInput}
+                  onChange={(e) => setIncomeSourceInput(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Amount:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={incomeAmountInput}
+                  onChange={(e) => setIncomeAmountInput(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">Add Income</button>
+            </form>
+          </div>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </div>
+);
 };
 
 export default IncomeForm;
