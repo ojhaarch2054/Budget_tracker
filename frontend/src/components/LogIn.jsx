@@ -28,10 +28,10 @@ const LogIn = () => {
       console.log("Login successful:", response.data);
       //check if the token user and roles are present in the response
       if (response.data.token && response.data.user && response.data.roles) {
-        //store JWT token, user, and roles in local storage        l
-        ocalStorage.setItem("token", response.data.token);
+        //store JWT token, user and role in local storage
+        localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("roles", JSON.stringify(response.data.roles));
+      localStorage.setItem("roles", JSON.stringify(response.data.roles));
         //update auth context with token, user, and roles
         setAuth({
           token: response.data.token,
@@ -43,12 +43,11 @@ const LogIn = () => {
           token: response.data.token,
           user: response.data.user,
           roles: response.data.roles,
-        });
-        //default Authorization header for future rqst
+        });        
+        //default Authorization header for future requests
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${response.data.token}`;
-        //after login sucessfully redirect to home page
         navigate("/homepage");
       } else {
         console.error("Token is undefined in the response:", response.data);
