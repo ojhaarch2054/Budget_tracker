@@ -35,10 +35,12 @@ const SignUp = () => {
     input.password &&
     input.confirmPassword &&
     input.password === input.confirmPassword;
-
+    //test password is valid or not
+    const passwordValid = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,20}$/.test(input.password);
   const signUpSubmit = async (e) => {
     e.preventDefault();
     console.log('signup successfully')
+   //check any field in empty or nt
     if (
       !input.name ||
       !input.address ||
@@ -49,11 +51,21 @@ const SignUp = () => {
       !input.confirmPassword
     ) {
       alert("must fill all the field");
+      return
     }
+    //check if the pw match with confirm pw or not
     if (!passwordsMatch) {
       alert("Passwords do not match");
       return;
     }
+    //check the password fulfills the validation criteria or not
+    if(!passwordValid){
+      alert("password must include one uppercase one lowercase letter one number and one special character and password must have 6 character");
+      return
+    }
+   
+
+   
     try {
       //post rqst to register user
       const response = await axios.post("http://localhost:3000/users", {
@@ -65,6 +77,12 @@ const SignUp = () => {
         job: input.job,
         phone: input.phone,
       });
+      //show the backend email varification error in frontend
+      if(response.status === 400){
+        alert(response.data.error);
+        //to stop further execution if there is any err
+        return
+      }
       //update the previous state by adding new added data
       setUsersDetails((prevState) => [...prevState, response.data]);
       setInput({
@@ -81,7 +99,12 @@ const SignUp = () => {
       navigate('/');
     } catch (error) {
       console.error("Error occurred:", error);
-      alert("Error occurred while signing up");
+      //if err obj has response and response has data and data has err then display the specific err
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert("Error occurred while signing up");
+      }
     }
   };
 

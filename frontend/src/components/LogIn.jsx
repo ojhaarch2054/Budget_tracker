@@ -95,7 +95,7 @@ const LogIn = () => {
           Log In
         </button>
         <br />
-        <small id="emailHelp" className="form-text text-muted">
+        <small id="emailHelp" className="form-text text-white">
           <br />
           No account? Register here <Link to="/sign-up">Sign Up</Link>
         </small>

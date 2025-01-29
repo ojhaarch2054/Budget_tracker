@@ -19,15 +19,23 @@ const postUsers = async (req, res) => {
   console.log("Received role:", role);
 
   try {
+    //check the email address if already exist in db or not
+    const findEmail = await pool.query("select * from users where email = $1", [email])
+    if(findEmail.rows.length > 0){
+      return res.status(400).json({error: "Email already exists"})
+    }
+    
     //hash the password
     const hashRound = Math.min(10 + Math.floor(password.length / 2), 20);
     const hashedPassword = await bcrypt.hash(password, hashRound);
 
     //insert the new user into the database and return the inserted row
     const result = await pool.query(
-      "INSERT INTO Users (email, password, fullname, lastname, address, job, phone, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+      "insert into users (email, password, fullname, lastname, address, job, phone, role) values ($1, $2, $3, $4, $5, $6, $7, $8) returning *",
       [email, hashedPassword, fullname, lastname, address, job, phone, role]
     );
+    
+
     //create a token for new user
     const token = createToken(result.rows[0].id, result.rows[0].role);
     console.log("Created token with role:", result.rows[0].role);
@@ -60,7 +68,7 @@ const postLoginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     //find the user by email
-    const result = await pool.query("SELECT * FROM Users WHERE email = $1", [
+    const result = await pool.query("select * from users where email = $1", [
       email,
     ]);
     if (result.rows.length === 0) {
@@ -91,7 +99,7 @@ const getLogInUserById = async (req, res) => {
     //extract user id from req obj
     const userId = req.user.id;
     //select the user from table if id matches in with table userid
-    const result = await pool.query("SELECT * FROM Users WHERE id = $1", [
+    const result = await pool.query("select * from users where id = $1", [
       userId,
     ]);
     //send the first row of the result
