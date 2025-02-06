@@ -53,10 +53,15 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-  "email": "Harry@gmail.com",
-  "password": "asdfghjkl"
+  "email": "hei@gmail.com",
+  "password": "123456789"
 }
 
 ###get login user by id
-GET http://localhost:3000/users/13
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsImlhdCI6MTczNzYzODMyMCwiZXhwIjoxNzM3ODk3NTIwfQ.DWHzpkyIKWIwUXmYmKDdOikI7acYIcfZo2-JiDmE7o4
+GET http://localhost:3000/users/34
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsInJvbGUiOiIiLCJpYXQiOjE3Mzg4NjU2NjAsImV4cCI6MTczODg2NTcyMH0.Y1Rp0-6SMydj2JLoXb0eJbBMoWU5ZtRz0MgCHG6-eVU
+
+###
+POST http://localhost:3000/refresh-token
+Content-Type: application/json
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQsInJvbGUiOiIiLCJpYXQiOjE3Mzg4NjU1NzksImV4cCI6MTczODg4MzU3OX0.YjI9Bof_0iMFkNYcc1Rrs6JVIP9p6av3MgxV-12F-TM
