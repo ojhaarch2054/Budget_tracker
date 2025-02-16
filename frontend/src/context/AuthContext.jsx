@@ -9,7 +9,9 @@ export const AuthProvider = ({ children }) => {
     //to save token
     const [token, setToken] = useState(localStorage.getItem("token"));
     //to save role
-    const [role, setRole] = useState(localStorage.getItem("role"))
+    const [role, setRole] = useState(localStorage.getItem("role"));
+    //to save refresh token
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"))
 
     //to handle user login
     const logIn = useCallback(async (email, password) => {
@@ -26,9 +28,14 @@ export const AuthProvider = ({ children }) => {
                 setUser(data.user);
                 setToken(data.token);
                 setRole("user");
+                setRefreshToken(data.refreshtoken)
                 //store token and role in local storage
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("role", "user");
+                localStorage.setItem("refreshToken", data.refreshtoken);
+                console.log(setUser);
+                console.log(setToken);
+                console.log(setRefreshToken)
             } else {
                 throw new Error("No match role");
             }
