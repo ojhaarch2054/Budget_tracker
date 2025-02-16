@@ -45,11 +45,6 @@ const postUsers = async (req, res) => {
       "insert into users (email, password, fullname, lastname, address, job, phone, role) values ($1, $2, $3, $4, $5, $6, $7, $8) returning *",
       [email, hashedPassword, fullname, lastname, address, job, phone, role]
     );
-    res.cookie("refreshToken", refreshT, {
-      httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
-    });
-
     //log the result
     console.log("added to table: " + result);
     //send the user data and ID in the response

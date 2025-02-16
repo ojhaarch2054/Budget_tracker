@@ -4,13 +4,14 @@ import { ContextApi } from "../context/ContextApi";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import { useAuth } from '../context/AuthContext';
+
 
 const SummaryForm = () => {
   const { expenseState, setExpenseState, incomeState, setIncomeState } =
     useContext(ContextApi);
-    //destructure auth from AuthContext
-    const { auth } = useContext(AuthContext);
+    //destructure the obj
+    const {isAuthenticate, role, token } = useAuth();
     //initialize navigation function
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ const SummaryForm = () => {
         const response = await axios.get("http://localhost:3000/expenses", {
           //include authorization token in headers
           headers: {
-            Authorization: `Bearer ${auth.token}`
+            Authorization: `Bearer ${token}`
           }
         });
         //update state with fetched data
@@ -32,10 +33,10 @@ const SummaryForm = () => {
       }
     };
     //fetch data if the user is authenticated
-    if (auth.token) {
+    if (token) {
       fetchData();
     }
-  }, [setExpenseState, auth.token]);
+  }, [setExpenseState, token]);
 
   //fetch income data
   useEffect(() => {
@@ -45,7 +46,7 @@ const SummaryForm = () => {
         const response = await axios.get("http://localhost:3000/income" , {
           //added authorization token in headers
           headers: {
-            Authorization: `Bearer ${auth.token}`
+            Authorization: `Bearer ${token}`
           }
         });
         //update icome state with fetched data
@@ -55,22 +56,22 @@ const SummaryForm = () => {
       }
     };
     //fetch data if use is authenticated
-    if (auth.token) {
+    if (token) {
       fetchIncome();
     }
-  }, [setIncomeState, auth.token]);
+  }, [setIncomeState, token]);
 
   //for delete btn/ to delete expenses
   const deleteExpenses = (id) => {
     //check user is authenticate or not
-    if (!auth.token) {
+    if (!isAuthenticate) {
       alert("You must be logged in to delete expenses");
       return;
     }
     //check if user has user role or not
-    if (!auth.user || (typeof auth.roles === 'string' ? ![auth.roles].includes("user") : !auth.roles.includes("user"))) {
-      console.log("Auth roles inside condition:", auth.roles);
-      alert("You do not have permission to add income");
+    if (role !== 'user') {
+      console.log("Auth roles inside condition:", role);
+      alert("You do not have permission to delete expenses");
       return;
     }
     if (window.confirm("Do you want to delete this expense?")) {
@@ -81,7 +82,7 @@ const SummaryForm = () => {
           //send dlt rqst to server with expenseid
           await axios.delete(`http://localhost:3000/expenses/delete/${id}`, {
             headers: {
-              Authorization: `Bearer ${auth.token}`
+              Authorization: `Bearer ${token}`
             }
           });
           //console.log(`Delete request successful for expense id: ${id}`);

@@ -2,11 +2,11 @@ import { ContextApi } from "../context/ContextApi";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import { useAuth } from '../context/AuthContext';
 
 const ShowIncomeDetails = () => {
   const { incomeState, setIncomeState } = useContext(ContextApi);
-  const { auth } = useContext(AuthContext);
+  const { token, role } = useAuth();
 
   const navigate = useNavigate();
   //fetch income data
@@ -17,7 +17,7 @@ const ShowIncomeDetails = () => {
         const response = await axios.get("http://localhost:3000/income", {
           //added authorization token in headers
           headers: {
-            Authorization: `Bearer ${auth.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         //update state with fetched data
@@ -27,10 +27,10 @@ const ShowIncomeDetails = () => {
       }
     };
     //fetch data if the user is authenticated and has user role
-    if (auth.token && auth.role === "user") {
+    if (token && role === "user") {
       fetchIncome();
     }
-  }, [setIncomeState, auth.token, auth.role]);
+  }, [setIncomeState, token, role]);
 
   const goBackBtn = () => {
     navigate("/Homepage");

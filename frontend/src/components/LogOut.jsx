@@ -1,19 +1,23 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import { useAuth } from '../context/AuthContext';
 import "../css/logOut.css"
 
 const Logout = () => {
-    const { logout } = useContext(AuthContext);
+    const { isAuthenticate, logOut } = useAuth();
     const navigate = useNavigate();
     //track the logOutStatus
     const [isLoggedOut, setIsLoggedOut] = useState(false);
 
 
     const logOutBtn = async () => {
+        if (!isAuthenticate) {
+            alert("You are not logged in.");
+            return;
+        }
         if (window.confirm("Do you want to logout?")) {
             //call the logout function from AuthContext
-            await logout();
+            await logOut();
             console.log("Logout Successful");
             //check token is cleared or not
             if (!localStorage.getItem('token')) {

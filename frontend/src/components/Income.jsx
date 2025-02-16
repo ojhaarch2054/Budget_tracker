@@ -2,7 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useContext, useState } from "react";
 import { ContextApi } from "../context/ContextApi";
 import axios from "axios";
-import AuthContext from "../context/AuthProvider";
+import { useAuth } from '../context/AuthContext';
+
 
 const IncomeForm = ({}) => {
   const { setIncomeState } = useContext(ContextApi);
@@ -10,22 +11,21 @@ const IncomeForm = ({}) => {
   const [incomeSourceInput, setIncomeSourceInput] = useState("");
   //for amount input
   const [incomeAmountInput, setIncomeAmountInput] = useState("");
-  const { auth } = useContext(AuthContext);
+  const {isAuthenticate, role, token } = useAuth();
 
   // Add logging to check the auth object
-  console.log("Auth object:", auth);
+  console.log("Auth object:", { isAuthenticate, role, token });
 
   //to make postRequest
   const submitIncome = async (e) => {
     // Add logging to check the role before the condition
-    console.log("Auth role before condition:", auth?.roles);
-    //if the user is logged in by verifying the presence of auth and auth.token
+    console.log("Auth role before condition:", role);
     //if the user has the user role
-    if (!auth.user || (typeof auth.roles === 'string' ? ![auth.roles].includes("user") : !auth.roles.includes("user"))) {
-      console.log("Auth roles inside condition:", auth.roles);
-      alert("You do not have permission to add income");
-      return;
-    }
+      if (!isAuthenticate || role !== 'user') {
+        console.log("Auth roles inside condition:", role);
+        alert("You do not have permission to add income");
+        return;
+      }
 
     try {
       //send reqst to add income
@@ -38,7 +38,7 @@ const IncomeForm = ({}) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${auth.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useContext, useState, useEffect } from "react";
 import { ContextApi } from '../context/ContextApi';
 import axios from 'axios';
-import AuthContext from "../context/AuthProvider";
+import { useAuth } from '../context/AuthContext';
 
 const ExpenseForm = () => {
   const { expenseState,setExpenseState } = useContext(ContextApi);
@@ -10,19 +10,19 @@ const ExpenseForm = () => {
   const [expenseTitle, setExpenseTitle] = useState('');
   //for expense amt
   const [expenseAmt, setExpenseAmt] = useState('');
-  const { auth } = useContext(AuthContext);
+  const {isAuthenticate, role, token } = useAuth();
 
   useEffect(() => {
-    if (auth.token && auth.role === 'user') {
+    if (isAuthenticate && role === 'user') {
       fetchExpenses();
     }
-  }, [auth.token, auth.role]);
+  }, [isAuthenticate, role]);
 
   const fetchExpenses = async () => {
     try {
       const response = await axios.get('http://localhost:3000/expenses', {
         headers: {
-          Authorization: `Bearer ${auth.token}`
+          Authorization: `Bearer ${token}`
         }
       });
       setExpenseState(response.data);
@@ -33,15 +33,10 @@ const ExpenseForm = () => {
 
   const submitExpenses = async (e) => {
     e.preventDefault();
-    // Add logging to check the role before the condition
-    console.log("Auth role before condition:", auth?.roles);
-    //if the user is logged in by verifying the presence of auth and auth.token
-    //if the user has the user role
-    if (!auth.user || (typeof auth.roles === 'string' ? ![auth.roles].includes("user") : !auth.roles.includes("user"))) {
-      console.log("Auth roles inside condition:", auth.roles);
-      alert("You do not have permission to add income");
-      return;
-    }
+      if (!isAuthenticate || role !== 'user') {
+        alert("You do not have permission to add income");
+        return;
+      }
     try {
       const response = await axios.post('http://localhost:3000/expenses/add', {
         category: expenseTitle,
@@ -49,7 +44,7 @@ const ExpenseForm = () => {
         date_paid: new Date().toISOString().split('T')[0]
       }, {
         headers: {
-          Authorization: `Bearer ${auth.token}`
+          Authorization: `Bearer ${token}`
         }
     });
       //update the previous state by adding new added data
