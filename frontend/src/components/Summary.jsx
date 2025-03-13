@@ -4,15 +4,15 @@ import { ContextApi } from "../context/ContextApi";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '../context/AuthContext';
-
+import { useAuth } from "../context/AuthContext";
+import axiosInstance from "../utils/axiosInstance";
 
 const SummaryForm = () => {
   const { expenseState, setExpenseState, incomeState, setIncomeState } =
     useContext(ContextApi);
-    //destructure the obj
-    const {isAuthenticate, role, token } = useAuth();
-    //initialize navigation function
+  //destructure the obj
+  const { isAuthenticate, role, token } = useAuth();
+  //initialize navigation function
   const navigate = useNavigate();
 
   //useEffect to fetch expense from the backend
@@ -20,12 +20,8 @@ const SummaryForm = () => {
     const fetchData = async () => {
       try {
         //get rqst to fetch expenses
-        const response = await axios.get("http://localhost:3000/expenses", {
-          //include authorization token in headers
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await axiosInstance.get("/expenses");
+
         //update state with fetched data
         setExpenseState(response.data);
       } catch (error) {
@@ -43,12 +39,7 @@ const SummaryForm = () => {
     const fetchIncome = async () => {
       try {
         //get rqst to fetch income
-        const response = await axios.get("http://localhost:3000/income" , {
-          //added authorization token in headers
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await axiosInstance.get("/income");
         //update icome state with fetched data
         setIncomeState(response.data);
       } catch (error) {
@@ -69,7 +60,7 @@ const SummaryForm = () => {
       return;
     }
     //check if user has user role or not
-    if (role !== 'user') {
+    if (role !== "user") {
       console.log("Auth roles inside condition:", role);
       alert("You do not have permission to delete expenses");
       return;
@@ -80,11 +71,7 @@ const SummaryForm = () => {
           //console.log(`Sending delete request for expense id: ${id}`);
 
           //send dlt rqst to server with expenseid
-          await axios.delete(`http://localhost:3000/expenses/delete/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
+          await axiosInstance.delete(`/expenses/delete/${id}`);
           //console.log(`Delete request successful for expense id: ${id}`);
 
           //update the state to remove deleted expenses
@@ -95,10 +82,13 @@ const SummaryForm = () => {
             return updatedExpenses;
           });
         } catch (error) {
-            console.error("Error deleting expense:", error.response?.data || error.message);
-          }
+          console.error(
+            "Error deleting expense:",
+            error.response?.data || error.message
+          );
         }
-        //call the async fun to delete the expenses
+      };
+      //call the async fun to delete the expenses
       deleteExp();
     }
   };

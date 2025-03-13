@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
+import axiosInstance from "../utils/axiosInstance";
 
 const ShowIncomeDetails = () => {
   const { incomeState, setIncomeState } = useContext(ContextApi);
@@ -14,12 +15,8 @@ const ShowIncomeDetails = () => {
     const fetchIncome = async () => {
       try {
         //get rqst to fetch income data
-        const response = await axios.get("http://localhost:3000/income", {
-          //added authorization token in headers
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.get("/income");
+
         //update state with fetched data
         setIncomeState(response.data);
       } catch (error) {

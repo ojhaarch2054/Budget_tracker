@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import "../css/logOut.css"
+import Cookies from 'js-cookie';
 
 const Logout = () => {
     const { isAuthenticate, logOut } = useAuth();
@@ -20,7 +21,7 @@ const Logout = () => {
             await logOut();
             console.log("Logout Successful");
             //check token is cleared or not
-            if (!localStorage.getItem('token')) {
+            if (!Cookies.get('token')) {
                 setIsLoggedOut(true);
                 //if clear navigate to login page
                 navigate('/');

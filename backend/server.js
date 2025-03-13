@@ -20,7 +20,15 @@ dotenv.config();
 //middleware to parse json rqst bodies
 app.use(express.json());
 //enable cors for all routes
-app.use(cors());
+//app.use(cors());
+//cors configuration
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    //allowto accept credentials like cookies, authorization headers, etc
+    credentials: true, 
+  };
+  app.use(cors(corsOptions));
+  
 
 app.get('/', (req, res) => {
     res.send('Welcome to Budget Tracker');

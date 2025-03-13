@@ -5,12 +5,12 @@ dotenv.config();
 
 //to authenticate users using JWT
 const fetchUsers = (req, res, next) => {
-  //if the authorization header is present
-  if (!req.headers.authorization) {
-    return res.status(401).send({ error: "Authorization header is missing" });
+  //if the jwt cookie is not present
+  if (!req.cookies.jwt) {
+    return res.status(401).send({ error: "Authorization token is missing" });
   }
-  //get token from the authorization header and remove the bearer
-  const token = req.headers.authorization.split(' ')[1];
+  //get token from the cookies
+  const token = req.cookies.jwt;
   //if no token
   if (!token) {
     return res.status(401).send({ error: "Please authenticate using valid token" });
@@ -27,7 +27,6 @@ const fetchUsers = (req, res, next) => {
     res.status(401).send({ error: "Please authenticate using valid token" });
   }
 };
-
 
 const authorizeRole = (roles) => {
   return (req, res, next) => {

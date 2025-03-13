@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { ContextApi } from '../context/ContextApi';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import axiosInstance from '../utils/axiosInstance';
 
 const ExpenseForm = () => {
   const { expenseState,setExpenseState } = useContext(ContextApi);
@@ -20,11 +21,7 @@ const ExpenseForm = () => {
 
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/expenses', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const response = await axiosInstance.get('/expenses');
       setExpenseState(response.data);
     } catch (error) {
       console.error('Error fetching expenses:', error);
@@ -38,15 +35,14 @@ const ExpenseForm = () => {
         return;
       }
     try {
-      const response = await axios.post('http://localhost:3000/expenses/add', {
-        category: expenseTitle,
-        amount: expenseAmt,
-        date_paid: new Date().toISOString().split('T')[0]
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axiosInstance.post(
+        '/expenses/add',
+        {
+          category: expenseTitle,
+          amount: expenseAmt,
+          date_paid: new Date().toISOString().split('T')[0],
         }
-    });
+      );
       //update the previous state by adding new added data
       setExpenseState(prevState => [...prevState, response.data]);
       //for input field

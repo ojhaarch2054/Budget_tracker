@@ -7,11 +7,11 @@ dotenv.config();
 
 //fun to create a jwt token with the user id
 const createToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1m" });
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "15m" });
 };
 //fun to create lrefresh token
 const refreshTokenKey = (id, role) => {
-  return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "5h" });
+  return jwt.sign({ id, role }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7h" });
 };
 //for post request for register
 const postUsers = async (req, res) => {
@@ -82,15 +82,19 @@ const postLoginUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
     //create a token for the user
-    const token = createToken(user.id, user.role, "1m");
-    const refreshT = refreshTokenKey(user.id, user.role, "5h");
+    const token = createToken(user.id, user.role);
+    const refreshT = refreshTokenKey(user.id, user.role);
 
     //set the token as a cookie
-    res.cookie("jwt", token, { httpOnly: true, maxAge: 5 * 60 * 60 * 1000 });
+    res.cookie("jwt", token, { httpOnly: true, maxAge: 15 * 60 * 1000 });
     res.cookie("refreshToken", refreshT, {
       httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 7 * 60 * 60 * 1000,
     });
+
+     //log the set cookies
+     console.log("JWT token set:", token);
+     console.log("Refresh token set:", refreshT);
 
     //send the user data and roles in the response
     res
@@ -141,8 +145,11 @@ const logOut = async (req, res) => {
 
 //for refresh token
 const refreshToken = async (req, res) => {
+  console.log("Cookies received:", req.cookies);
   //extract the refresh token from the cokies in the rqst
   const refreshToken = req.cookies.refreshToken;
+  console.log("Received refresh token:", refreshToken);
+
   //if not then send 401 code
   if (!refreshToken) {
     return res.status(401).json({ error: "No refresh token provided" });
@@ -151,11 +158,16 @@ const refreshToken = async (req, res) => {
   try {
     //verify the refresh token using secret key
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    //create new access token with the user ID and role, valid for 2 hours
+    console.log("Refresh token decoded:", decoded);
 
-    const newToken = createToken(decoded.id, decoded.role, "1m");
-    //set the new access token as a cookie in the response 2-hour expiration
-    res.cookie("jwt", newToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 1000 });
+    //create new access token with the user ID and role, valid for 15 min
+    const newToken = createToken(decoded.id, decoded.role);
+
+    console.log("New access token created:", newToken);
+
+    //set the new access token as a cookie in the response
+    res.cookie("jwt", newToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
+    
     //send the new access token in the response body
     res.status(200).json({ token: newToken });
   } catch (err) {

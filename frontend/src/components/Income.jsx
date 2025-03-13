@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { ContextApi } from "../context/ContextApi";
 import axios from "axios";
 import { useAuth } from '../context/AuthContext';
+import axiosInstance from "../utils/axiosInstance";
 
 
 const IncomeForm = ({}) => {
@@ -13,12 +14,12 @@ const IncomeForm = ({}) => {
   const [incomeAmountInput, setIncomeAmountInput] = useState("");
   const {isAuthenticate, role, token } = useAuth();
 
-  // Add logging to check the auth object
+  //log to check the auth object
   console.log("Auth object:", { isAuthenticate, role, token });
 
   //to make postRequest
   const submitIncome = async (e) => {
-    // Add logging to check the role before the condition
+    //add logging to check the role before the condition
     console.log("Auth role before condition:", role);
     //if the user has the user role
       if (!isAuthenticate || role !== 'user') {
@@ -29,28 +30,24 @@ const IncomeForm = ({}) => {
 
     try {
       //send reqst to add income
-      const response = await axios.post(
-        "http://localhost:3000/incomes/add",
+      const response = await axiosInstance.post(
+        "/incomes/add",
         {
           source_name: incomeSourceInput,
           amount: incomeAmountInput,
           date_received: new Date().toISOString().split("T")[0],
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
       //update the previous income state by adding new income
       setIncomeState((prevState) => [...prevState, response.data]);
       //clear input field after adding
       setIncomeAmountInput("");
       setIncomeSourceInput("");
+      //console.log("Income added successfully:", incomeAmountInput);
+      //alert(incomeAmountInput + " is added to income");
     } catch (error) {
       console.error("Error submitting income:", error);
     }
-    alert(incomeAmountInput + " is added to income");
   };
 
   return (
