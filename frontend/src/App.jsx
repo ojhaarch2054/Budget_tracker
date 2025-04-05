@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Logout from "./components/LogOut.jsx";
 import "./css/body.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import Profile from "./components/Profile.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
                 element={
                   <>
                     <Logout />
+                    <Profile/>
                     <div className="row">
                       <div className="col-12 col-lg-4 mb-4">
                         <IncomeForm />
