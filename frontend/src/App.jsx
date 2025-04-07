@@ -11,6 +11,7 @@ import Logout from "./components/LogOut.jsx";
 import "./css/body.css";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import Profile from "./components/Profile.jsx";
+import ProfileDetails from "./components/profileDetails.jsx";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
               <Route path="/income-details" element={<ShowIncomeDetails />} />
               <Route path="/" element={<LogIn />} />
               <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/profile" element={<ProfileDetails/>}/>
             </Routes>
           </div>
         </ContextProvider>

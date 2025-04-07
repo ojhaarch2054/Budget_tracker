@@ -1,6 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
+
 const Profile = () => {
+    const navigate = useNavigate();
+
   const profileBtn = () => {
     console.log("profile page");
+    navigate('/profile');
   };
   return (
     <div className="d-flex justify-content-center">
