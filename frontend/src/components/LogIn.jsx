@@ -38,11 +38,12 @@ const LogIn = () => {
       //if login is succesful navigate to home
       navigate("/homepage");
     } catch (error) {
-      //if login is fail send err msg
-      console.error(
-        "Login failed:",
-        error.response?.data?.error || error.message
-      );
+      if (error.response && error.response.status === 400) {
+        const errMsg = error.response.data.error || error.response.data;
+        setError(errMsg);
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
