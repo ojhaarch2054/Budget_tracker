@@ -15,6 +15,14 @@ const SummaryForm = () => {
   //initialize navigation function
   const navigate = useNavigate();
 
+    //redirect if token is missing or role is not user
+    useEffect(() => {
+      if (!token || role !== "user") {
+        navigate("/");
+        return;
+      }
+    }, [token, role, navigate]);
+
   //useEffect to fetch expense from the backend
   useEffect(() => {
     const fetchData = async () => {

@@ -9,13 +9,12 @@ export const AuthProvider = ({ children }) => {
   //to save user info
   const [user, setUser] = useState(null);
   //to save token
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(Cookies.get("token") || null);
   //to save role
-  const [role, setRole] = useState(localStorage.getItem("role"));
+  const [role, setRole] = useState(Cookies.get("role") || null);;
   //to save refresh token
-  const [refreshToken, setRefreshToken] = useState(
-    localStorage.getItem("refreshToken")
-  );
+  const [refreshToken, setRefreshToken] = useState(Cookies.get("refreshToken") || null);
+
 
   //to handle user login
   const logIn = useCallback(async (email, password) => {
@@ -60,6 +59,7 @@ export const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     Cookies.remove("role");
     Cookies.remove("refreshToken");
+
   }, []); //add empty dependency array to ensure it doesn't change on every render
 
   //ceate the object of values to provide

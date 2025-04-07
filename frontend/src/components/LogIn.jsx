@@ -11,6 +11,8 @@ const LogIn = () => {
     password: "",
   });
   const navigate = useNavigate();
+  //to show the err msg
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,11 +20,18 @@ const LogIn = () => {
       ...prevState,
       [name]: value,
     }));
+     //clear err msg when user type in input field
+     setError("");
   };
 
   //to submit login
   const logInSubmit = async (e) => {
     e.preventDefault();
+    if (!input.email || !input.password) {
+      //set err msg
+      setError("Email and password are required."); 
+      return;
+    }
     try {
       //try to login with email and pw
       await logIn(input.email, input.password);
@@ -67,7 +76,7 @@ const LogIn = () => {
           />
         </div>
         <br />
-
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit" className="btn btn-primary">
           Log In
         </button>

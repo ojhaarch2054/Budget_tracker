@@ -4,6 +4,7 @@ import { ContextApi } from '../context/ContextApi';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../utils/axiosInstance';
+import { useNavigate } from "react-router-dom";
 
 const ExpenseForm = () => {
   const { expenseState,setExpenseState } = useContext(ContextApi);
@@ -12,8 +13,15 @@ const ExpenseForm = () => {
   //for expense amt
   const [expenseAmt, setExpenseAmt] = useState('');
   const {isAuthenticate, role, token } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    //redirect if token is missing or role is not user
+  if (!token || role !== "user") {
+    navigate("/");
+    return;
+  }
+  console.log("Auth role before condition:", role);
     if (isAuthenticate && role === 'user') {
       fetchExpenses();
     }

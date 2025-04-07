@@ -40,11 +40,16 @@ const ProfileDetails = () => {
       fetchData();
     } else {
       setLoading(false); //stop loading if no token is available
+      navigate("/");
     }
   }, [token]);
 
   const backBtn = () => {
-    navigate("/homepage");
+    if (token) {
+        navigate("/homepage"); // Navigate only if the user is authenticated
+      } else {
+        navigate("/"); // Redirect to login if not authenticated
+      }
   };
 
   if (loading) return <p>Loading...</p>;

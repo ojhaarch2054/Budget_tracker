@@ -1,6 +1,5 @@
 import { ContextApi } from "../context/ContextApi";
 import { useContext, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from "../utils/axiosInstance";
@@ -12,6 +11,10 @@ const ShowIncomeDetails = () => {
   const navigate = useNavigate();
   //fetch income data
   useEffect(() => {
+    if (!token || role !== "user") {
+      navigate("/");
+      return;
+    }
     const fetchIncome = async () => {
       try {
         //get rqst to fetch income data
@@ -40,26 +43,29 @@ const ShowIncomeDetails = () => {
       </button>
       <div className="right-side">
         <div className="card">
-          <div className="card-body">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Income Source</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Date received</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(incomeState) &&
-                  incomeState.map((income) => (
+        <div className="card-body">
+            {Array.isArray(incomeState) && incomeState.length > 0 ? (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Income Source</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Date received</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {incomeState.map((income) => (
                     <tr key={income.id}>
                       <td>{income.source_name}</td>
                       <td>{income.amount}</td>
                       <td>{income.date_received}</td>
                     </tr>
                   ))}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            ) : (
+              <p>No income data available.</p>
+            )}
           </div>
         </div>
       </div>
