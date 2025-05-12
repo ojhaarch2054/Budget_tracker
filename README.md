@@ -1,6 +1,6 @@
 # 💰 Budget Tracker App
 
-This is a full-stack **Budget Tracker** application built as my **first project** to learn about **authentication** and **authorization** using modern web technologies. The app allows users to track their income and expenses, manage their budget, and gain insights into their financial data.
+This is a full-stack **Budget Tracker** application built as my **first project** to learn about **authentication** and **authorization** using modern web technologies. The app allows users to track their income and expenses.
 
 ---
 
